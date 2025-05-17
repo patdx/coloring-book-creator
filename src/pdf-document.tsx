@@ -87,6 +87,23 @@ export function PdfDocumentRenderer() {
           </p>
           <p>All processing happens inside your browser.</p>
           <p>Upload a file to see the PDF preview.</p>
+          <p>
+            Created by{' '}
+            <a
+              href="https://github.com/patdx"
+              className="text-blue-700 hover:underline"
+            >
+              patdx
+            </a>
+          </p>
+          <p>
+            <a
+              href="https://github.com/patdx/coloring-book-creator"
+              className="text-blue-700 hover:underline"
+            >
+              Source Code (GitHub)
+            </a>
+          </p>
         </div>
       )}
     </>
