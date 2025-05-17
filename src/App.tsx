@@ -1,15 +1,13 @@
 import { PdfDocumentRenderer } from './pdf-document'
+import { Settings } from './settings'
 import { Uploader } from './uploader'
-import { useAppState } from './use-app-state'
 
 function App() {
-  const appState = useAppState()
-  const { uppy } = appState
-
   return (
-    <div className="main">
-      <Uploader uppy={uppy} />
-      <PdfDocumentRenderer uppy={uppy} />
+    <div className="grid grid-rows-[1fr_auto_1fr] grid-cols-1 gap-4 p-4 w-screen h-screen">
+      <Uploader />
+      <Settings />
+      <PdfDocumentRenderer />
     </div>
   )
 }

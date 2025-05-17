@@ -1,21 +1,24 @@
 import Uppy from '@uppy/core'
-import { useState } from 'react'
+import { create } from 'zustand'
+
+export type PageSize = 'A4' | 'LETTER'
 
 export type AppState = {
   uppy: Uppy
-  pageSize: 'a4' | 'letter'
+  pageSize: PageSize
+  setPageSize: (pageSize: PageSize) => void
   margin: boolean
+  setMargin: (margin: boolean) => void
 }
 
-export function useAppState() {
-  const [uppy] = useState(
-    () =>
-      new Uppy({
-        restrictions: {
-          allowedFileTypes: ['image/*'],
-        },
-      }),
-  )
-
-  return { uppy }
-}
+export const useAppState = create<AppState>((set) => ({
+  uppy: new Uppy({
+    restrictions: {
+      allowedFileTypes: ['image/*'],
+    },
+  }),
+  pageSize: 'A4',
+  setPageSize: (pageSize) => set({ pageSize }),
+  margin: true,
+  setMargin: (margin) => set({ margin }),
+}))

@@ -5,9 +5,9 @@ import {
   PDFViewer,
   StyleSheet,
 } from '@react-pdf/renderer'
-import Uppy from '@uppy/core'
 import { useUppyState } from '@uppy/react'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useAppState } from './use-app-state'
 
 // Create styles
 const styles = StyleSheet.create({
@@ -17,6 +17,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  pageMargin: {
+    padding: 20,
+  },
   image: {
     width: '100%',
     height: '100%',
@@ -25,15 +28,23 @@ const styles = StyleSheet.create({
 })
 
 // Create Document Component
-export const PdfDocument = ({ uppy }: { uppy: Uppy }) => {
+export const PdfDocument = () => {
+  const uppy = useAppState((state) => state.uppy)
   const files = useUppyState(uppy, (state) => state.files)
+  const pageSize = useAppState((state) => state.pageSize)
+  const margin = useAppState((state) => state.margin)
 
   return (
     <Document>
       {Object.keys(files).map((key) => {
         const file = files[key]
         return (
-          <Page size="A4" style={styles.page} key={file.id} wrap={false}>
+          <Page
+            size={pageSize}
+            style={[styles.page, ...(margin ? [styles.pageMargin] : [])]}
+            key={file.id}
+            wrap={false}
+          >
             <Image src={file.data} style={styles.image} />
           </Page>
         )
@@ -42,7 +53,8 @@ export const PdfDocument = ({ uppy }: { uppy: Uppy }) => {
   )
 }
 
-export function PdfDocumentRenderer({ uppy }: { uppy: Uppy }) {
+export function PdfDocumentRenderer() {
+  const uppy = useAppState((state) => state.uppy)
   const hasFiles = useUppyState(
     uppy,
     (state) => Object.keys(state.files).length > 0,
@@ -63,12 +75,19 @@ export function PdfDocumentRenderer({ uppy }: { uppy: Uppy }) {
             )
           }}
         >
-          <PDFViewer>
-            <PdfDocument uppy={uppy} />
+          <PDFViewer className="w-full h-full">
+            <PdfDocument />
           </PDFViewer>
         </ErrorBoundary>
       ) : (
-        <div>Upload a file to see the PDF preview</div>
+        <div className="p-4 border rounded flex flex-col gap-2">
+          <p>
+            This is a free tool to combine multiple images into a PDF, such as
+            for a coloring book.
+          </p>
+          <p>All processing happens inside your browser.</p>
+          <p>Upload a file to see the PDF preview.</p>
+        </div>
       )}
     </>
   )
